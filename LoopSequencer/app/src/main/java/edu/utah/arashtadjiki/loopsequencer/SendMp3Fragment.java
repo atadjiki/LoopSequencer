@@ -35,7 +35,7 @@ public class SendMp3Fragment extends Fragment implements View.OnClickListener {
         _rootLayout.setOrientation(LinearLayout.VERTICAL);
         _rootLayout.setDividerPadding(100);
         _rootLayout.setVerticalGravity(Gravity.CENTER_VERTICAL);
-        _rootLayout.setBackgroundColor(Color.BLACK);
+        _rootLayout.setBackgroundColor(Color.DKGRAY);
 
         label = new TextView(getContext());
         label.setText("Enter Email Address To Send File To:");
@@ -48,6 +48,7 @@ public class SendMp3Fragment extends Fragment implements View.OnClickListener {
         emailView = new EditText(getContext());
         emailView.setEnabled(true);
         emailView.setText("_@_.com");
+        emailView.setBackgroundColor(Color.WHITE);
         _rootLayout.addView(emailView, new LinearLayoutCompat.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
 
         sendButton = new Button(getContext());

@@ -1,5 +1,6 @@
 package edu.utah.arashtadjiki.loopsequencer;
 
+import android.graphics.Color;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -27,6 +28,7 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
     public static final String SEND_MP3_FRAGMENT_TAG = "SendMP3Fragment";
     public static final String NEW_TIMELINE_FRAGMENT_TAG = "NewTimelineFragment";
     public static final String LOAD_FRAGMENT_TAG = "LoadFragment";
+
     private NewTimelineFragment _newTimelineFragment;
     private SendMp3Fragment _sendMp3Fragment;
     private LoadFragment _loadFragment;
@@ -50,6 +52,8 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
         _rootLayout.setDividerPadding(100);
         _rootLayout.setOrientation(LinearLayout.VERTICAL);
         _rootLayout.setHorizontalGravity(Gravity.CENTER_HORIZONTAL);
+        _rootLayout.setVerticalGravity(Gravity.CENTER_VERTICAL);
+        _rootLayout.setBackgroundColor(Color.DKGRAY);
 
         //put logo/image here
 

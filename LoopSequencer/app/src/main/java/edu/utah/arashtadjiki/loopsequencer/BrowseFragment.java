@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutCompat;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,20 +46,21 @@ public class BrowseFragment extends Fragment implements ListAdapter, View.OnClic
 
         _rootLayout = new LinearLayout(getContext());
         _rootLayout.setOrientation(LinearLayout.VERTICAL);
-        _rootLayout.setBackgroundColor(Color.BLACK);
+        _rootLayout.setBackgroundColor(Color.DKGRAY);
+        _rootLayout.setGravity(Gravity.CENTER);
 
         _listView = new ListView(getContext());
 
         _buttonLayout = new LinearLayout(getContext());
         _buttonLayout.setOrientation(LinearLayout.HORIZONTAL);
+        _buttonLayout.setGravity(Gravity.CENTER);
 
         _playButton = new Button(getContext());
         _playButton.setText("Play");
-        _playButton.setTextColor(Color.GREEN);
+        _playButton.setOnClickListener(this);
 
         _sendButton = new Button(getContext());
         _sendButton.setText("Send Mp3");
-        _sendButton.setTextColor(Color.GREEN);
         _sendButton.setOnClickListener(this);
 
         _rootLayout.addView(_listView, new LinearLayoutCompat.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 5));
@@ -67,6 +69,16 @@ public class BrowseFragment extends Fragment implements ListAdapter, View.OnClic
         _rootLayout.addView(_buttonLayout, new LinearLayoutCompat.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
     }
 
+    @Override
+    public void onClick(View v) {
+
+        if( v==_sendButton){
+            onSendMP3Listener.OnSendMP3();
+        }
+        else if(v==_playButton){
+            //do play mp3
+        }
+    }
     @Override
     public boolean areAllItemsEnabled() {
         return false;
@@ -131,11 +143,4 @@ public class BrowseFragment extends Fragment implements ListAdapter, View.OnClic
         return new BrowseFragment();
     }
 
-    @Override
-    public void onClick(View v) {
-
-        if( v==_sendButton){
-            onSendMP3Listener.OnSendMP3();
-        }
-    }
 }

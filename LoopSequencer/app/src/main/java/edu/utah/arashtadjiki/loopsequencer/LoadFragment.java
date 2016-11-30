@@ -31,12 +31,11 @@ public class LoadFragment extends Fragment implements View.OnClickListener, List
 
         _rootLayout = new LinearLayout(getContext());
         _rootLayout.setOrientation(LinearLayout.VERTICAL);
-        _rootLayout.setBackgroundColor(Color.BLACK);
+        _rootLayout.setBackgroundColor(Color.DKGRAY);
 
         timelineList = new ListView(getContext());
         openButton = new Button(getContext());
         openButton.setText("Open");
-        openButton.setTextColor(Color.GREEN);
         openButton.setOnClickListener(this);
 
         _rootLayout.addView(timelineList, new LinearLayoutCompat.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 4));

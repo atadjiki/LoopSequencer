@@ -35,9 +35,10 @@ public class NewTimelineFragment extends Fragment implements View.OnClickListene
         _rootLayout.setOrientation(LinearLayout.VERTICAL);
         _rootLayout.setGravity(Gravity.CENTER);
         _rootLayout.setDividerPadding(100);
-        _rootLayout.setBackgroundColor(Color.BLACK);
+        _rootLayout.setBackgroundColor(Color.DKGRAY);
 
         label = new TextView(getContext());
+        label.setGravity(Gravity.CENTER);
         label.setText("Enter Name For New Project");
         label.setTextColor(Color.GREEN);
         label.setTextSize(24f);
@@ -47,14 +48,13 @@ public class NewTimelineFragment extends Fragment implements View.OnClickListene
 
         nameField = new EditText(getContext());
         nameField.setText("default");
-        nameField.setTextColor(Color.GREEN);
+        nameField.setBackgroundColor(Color.WHITE);
         nameField.setEnabled(true);
         _rootLayout.addView(nameField, new LinearLayoutCompat.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
 
         createButton = new Button(getContext());
         createButton.setOnClickListener(this);
         createButton.setText("Create");
-        createButton.setTextColor(Color.GREEN);
         _rootLayout.addView(createButton, new LinearLayoutCompat.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
 
 
