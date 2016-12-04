@@ -1,5 +1,6 @@
 package edu.utah.arashtadjiki.loopsequencer;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -133,6 +134,7 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
 
         if(_newTimelineFragment == null) {
             _newTimelineFragment = NewTimelineFragment.newInstance();
+
             transaction.add(_newTimelineLayout.getId(), _newTimelineFragment, "NewTimelineFragment");
         }
         else{
@@ -140,6 +142,8 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
             _newTimelineFragment = NewTimelineFragment.newInstance();
             transaction.replace(_newTimelineLayout.getId(),_newTimelineFragment);
         }
+        _newTimelineFragment.setOnNewGameListener(new NewTimelineFragment.OnNewGameListener() {
+            @Override public void OnNewGame(String projectName) {launchNewGame();}});
         transaction.commit();
         setContentView(_newTimelineLayout);
     }
@@ -187,6 +191,12 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
         transaction.commit();
         setContentView(_sendMp3Layout);
 
+    }
+
+    private void launchNewGame() {
+
+        Intent intent = new Intent(this, TimelineActivity.class);
+        startActivity(intent);
     }
 
     @Override

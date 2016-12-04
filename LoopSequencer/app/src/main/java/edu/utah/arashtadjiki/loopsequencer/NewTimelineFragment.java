@@ -27,6 +27,11 @@ public class NewTimelineFragment extends Fragment implements View.OnClickListene
     private EditText nameField;
     private Button createButton;
 
+    public interface OnNewGameListener{void OnNewGame(String projectName);}
+    public void setOnNewGameListener(OnNewGameListener _newGameListener){newGameListener = _newGameListener;}
+    private OnNewGameListener newGameListener;
+
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -65,6 +70,9 @@ public class NewTimelineFragment extends Fragment implements View.OnClickListene
     public void onClick(View v) {
 
         Log.i("Debug", "Creating Game");
+        String projectname = nameField.getText().toString().trim().toLowerCase();
+        newGameListener.OnNewGame(projectname);
+
 
     }
 
