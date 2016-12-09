@@ -65,19 +65,44 @@ public class TimelineController {
         for (Integer position : positions) {
 
             List<AudioClip> toPlay = bufferMap.get(position);
+
             // Sound pool new instance
 
             // Sound pool on load complete listener
             spool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
                 @Override public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
                     Log.i("OnLoadCompleteListener","Sound "+sampleId+" loaded.");
-                    boolean loaded = true;
-                    soundPool.play(sampleId, 100f, 100f, 1, 0, 1);
+                    soundPool.play(sampleId, 200f, 200f, 1, 0, 1);
                 }});
             // Load the sample IDs
             for (AudioClip clip : toPlay) {
                 spool.load(context, clip.getResource(), position);
             }
         }
+    }
+
+    public static CharSequence[] getClipOptions(int TrackType){
+
+        if(TrackType == Track.SAMPLE){
+
+            return new CharSequence[]{"Sample 1", "Sample 2", "Sample 3", "Sample 4", "Empty"};
+
+        }else if (TrackType == Track.DRUM){
+
+            return new CharSequence[]{"Drum 1", "Drum 2", "Drum 3", "Drum 4", "Empty"};
+
+        } else if (TrackType == Track.BASS){
+
+            return new CharSequence[]{"Bass 1", "Bass 2", "Bass 3", "Bass 4", "Empty"};
+
+        } else
+            return null;
+    }
+
+    public static CharSequence[] getTrackOptions(){
+
+
+
+        return new CharSequence[]{"Drum", "Bass", "Sample"};
     }
 }

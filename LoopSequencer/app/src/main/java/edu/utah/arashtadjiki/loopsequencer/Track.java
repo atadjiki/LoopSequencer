@@ -34,4 +34,16 @@ public class Track implements Serializable {
         else if(_trackType == SAMPLE)
             trackType = SAMPLE;
     }
+
+    public String toString() {
+
+        if (trackType == DRUM)
+            return "Drum";
+        else if (trackType == SAMPLE)
+            return "Sample";
+        else if(trackType == BASS)
+            return "Bass";
+
+        return null;
+    }
 }
