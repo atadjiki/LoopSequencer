@@ -15,10 +15,43 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/Root">
+
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="459dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/toolBar"
+                android:background="@android:color/darker_gray"
+                android:layout_gravity="bottom|center_horizontal">
+
+                <Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="23.19" />
+
+                <Button
+                    android:text="Save"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/save_button"
+                    style="@style/Widget.AppCompat.Button.Small" />
+
+                <Button
+                    android:text="Play"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/playButton"
+                    android:layout_weight="1"
+                    android:gravity="left|center_vertical"
+                    android:layout_width="50dp"
+                    android:maxWidth="6060dp"
+                    style="@style/Base.Widget.AppCompat.Button.Small" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="467dp"
                 android:id="@+id/workSpace">
 
                 <LinearLayout
@@ -59,29 +92,6 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/toolBar"
-                android:background="@android:color/darker_gray"
-                android:layout_gravity="bottom|center_horizontal">
-
-                <Button
-                    android:text="Play"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/playButton"
-                    android:layout_weight="1"
-                    android:gravity="left|center_vertical"
-                    android:layout_width="50dp"
-                    android:maxWidth="6060dp"
-                    style="@style/Base.Widget.AppCompat.Button.Small" />
-
-                <Space
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="7.98" />
-            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

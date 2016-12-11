@@ -26,4 +26,7 @@ public class Timeline implements Serializable {
     public List<Track> getTracks() {return tracks;}
     public void setTracks(List<Track> tracks) {this.tracks = tracks;}
 
+    public String getProjectName() {
+        return projectName;
+    }
 }

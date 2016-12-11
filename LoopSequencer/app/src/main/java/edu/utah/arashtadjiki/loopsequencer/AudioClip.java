@@ -1,9 +1,11 @@
 package edu.utah.arashtadjiki.loopsequencer;
 
+import java.io.Serializable;
+
 /**
  * Created by Arash on 11/30/2016.
  */
-public class AudioClip {
+public class AudioClip implements Serializable {
 
     public static final int NULL = 0;
     public static final int AUDIO = 1;
