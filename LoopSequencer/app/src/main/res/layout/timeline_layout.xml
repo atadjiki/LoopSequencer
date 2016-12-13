@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -19,7 +20,7 @@
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="66dp"
                 android:id="@+id/toolBar"
                 android:background="@android:color/darker_gray"
                 android:layout_gravity="bottom|center_horizontal">
@@ -29,53 +30,64 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/start_end"
-                    android:layout_weight="1.26" />
+                    android:layout_weight="1.26"
+                    tools:textColor="@android:color/background_dark" />
 
                 <Button
                     android:text="Reset End Points"
-                    android:layout_width="120dp"
+                    android:layout_width="75dp"
                     android:layout_height="match_parent"
                     android:id="@+id/reset_start_end"
-                    style="@style/Widget.AppCompat.Button.Small" />
+                    style="@style/Widget.AppCompat.Button.Small"
+                    android:textSize="10sp" />
 
                 <Button
-                    android:text="Save"
-                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:id="@+id/save_button"
-                    style="@style/Widget.AppCompat.Button.Small" />
-
-                <Button
-                    android:text="Play"
-                    android:layout_height="wrap_content"
                     android:id="@+id/playButton"
                     android:layout_weight="1"
                     android:gravity="left|center_vertical"
-                    android:layout_width="50dp"
                     android:maxWidth="6060dp"
-                    style="@style/Base.Widget.AppCompat.Button.Small" />
+                    style="@style/Base.Widget.AppCompat.Button.Small"
+                    android:textSize="14sp"
+                    android:layout_width="wrap_content"
+                    android:text=" Play" />
+
+                <Button
+                    android:layout_height="match_parent"
+                    android:id="@+id/save_button"
+                    style="@style/Widget.AppCompat.Button.Small"
+                    tools:text="Save"
+                    android:layout_width="70dp" />
+
+                <Button
+                    android:text="Export"
+                    android:layout_width="80dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/export_button" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="467dp"
-                android:id="@+id/workSpace">
+                android:id="@+id/workSpace"
+                android:layout_height="1000dp">
 
                 <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="100dp"
                     android:layout_height="match_parent"
-                    android:background="@color/colorAccent"
+                    android:background="?android:attr/statusBarColor"
                     android:id="@+id/track_Layout">
 
                     <Button
-                        android:text="+"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/add_track_button"
-                        android:textSize="24sp" />
+                        style="@android:style/Widget.Button"
+                        android:background="@android:color/transparent"
+                        android:text="+"
+                        android:textSize="30sp" />
                 </LinearLayout>
 
                 <HorizontalScrollView

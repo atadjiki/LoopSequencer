@@ -40,6 +40,7 @@ public class LoadTimelineFragment extends Fragment implements ListAdapter, Adapt
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
+        getActivity().setTitle("Load Timeline");
         _rootLayout = new LinearLayout(getContext());
         _rootLayout.setOrientation(LinearLayout.VERTICAL);
         _rootLayout.setBackgroundColor(Color.DKGRAY);

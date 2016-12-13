@@ -1,27 +1,15 @@
 package edu.utah.arashtadjiki.loopsequencer;
 
-import android.graphics.Color;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 
 public class EntryActivity extends AppCompatActivity implements View.OnClickListener {
 
-    //initial view
-    private LinearLayout _rootLayout;
-    private Button _newButton;
-    private Button _loadButton;
-    private Button _browseButton;
 
-    //on mp3 browse
     public static final String BROWSE_FRAGMENT_TAG = "BrowseMP3Fragment";
     public static final String SEND_MP3_FRAGMENT_TAG = "SendMP3Fragment";
     public static final String NEW_TIMELINE_FRAGMENT_TAG = "NewTimelineFragment";
@@ -40,51 +28,33 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        setTitle("Loop Sequencer");
+        setContentView(R.layout.entry_layout);
         initialize();
-        setContentView(_rootLayout);
     }
 
     private void initialize() {
 
-        _rootLayout = new LinearLayout(this);
-        _rootLayout.setDividerPadding(100);
-        _rootLayout.setOrientation(LinearLayout.VERTICAL);
-        _rootLayout.setHorizontalGravity(Gravity.CENTER_HORIZONTAL);
-        _rootLayout.setVerticalGravity(Gravity.CENTER_VERTICAL);
-        _rootLayout.setBackgroundColor(Color.DKGRAY);
+        findViewById(R.id.new_project_button).setOnClickListener(this);
 
-        //put logo/image here
+        findViewById(R.id.load_project_button).setOnClickListener(this);
 
-        _newButton = new Button(this);
-        _newButton.setText("New Timeline");
-        _newButton.setOnClickListener(this);
-
-        _loadButton = new Button(this);
-        _loadButton.setText("Load Timeline");
-        _loadButton.setOnClickListener(this);
-
-        _browseButton = new Button(this);
-        _browseButton.setText("Browse Recordings");
-        _browseButton.setOnClickListener(this);
-
-        _rootLayout.addView(_newButton, new LinearLayoutCompat.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
-        _rootLayout.addView(_loadButton, new LinearLayoutCompat.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
-        _rootLayout.addView(_browseButton, new LinearLayoutCompat.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
+        findViewById(R.id.browse_button).setOnClickListener(this);
 
     }
 
     @Override
     public void onClick(View v) {
 
-        if(_newButton == v){
+        if(v.getId() == R.id.new_project_button){
             //launch timeline activity -- new
             Log.i("Debug", "new");
            launchNew();
-        } else if(_loadButton == v){
+        } else if(v.getId() == R.id.load_project_button){
             //goto timeline browse screen
             Log.i("Debug", "load");
             launchLoad();
-        } else if(_browseButton == v){
+        } else if(v.getId() == R.id.browse_button){
             //browse mp3 files recorded to device
             Log.i("Debug", "browse");
             launchBrowse();
@@ -181,7 +151,7 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onBackPressed() {
-        if(_rootLayout != null)
-            setContentView(_rootLayout);
+        setContentView(R.layout.entry_layout);
+        initialize();
     }
 }

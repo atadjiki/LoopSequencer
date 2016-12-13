@@ -23,8 +23,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -58,6 +60,7 @@ public class TimelineActivity extends AppCompatActivity implements View.OnClickL
         }else {
             timeline = new Timeline("default");
         }
+        setTitle("Project - " + timeline.getProjectName());
 
         setupTimeline();
         resetStartEndPoints();
@@ -182,6 +185,7 @@ public class TimelineActivity extends AppCompatActivity implements View.OnClickL
         findViewById(R.id.playButton).setOnClickListener(this);
         findViewById(R.id.save_button).setOnClickListener(this);
         findViewById(R.id.reset_start_end).setOnClickListener(this);
+        findViewById(R.id.export_button).setOnClickListener(this);
     }
 
     /*Pop Up Dialog Functions*/
@@ -590,6 +594,8 @@ public class TimelineActivity extends AppCompatActivity implements View.OnClickL
             TrackPressDialog(v);
         } else if(v.getId() == R.id.reset_start_end){
             resetStartEndPoints();
+        } else if(v.getId() == R.id.export_button){
+            exportTimelineToMp3();
         }
         else{
             int parentId = ((View) v.getParent().getParent()).getId();
@@ -598,6 +604,20 @@ public class TimelineActivity extends AppCompatActivity implements View.OnClickL
                 ClipPressDialog(v);
             }
         }
+    }
+
+    private void exportTimelineToMp3() {
+
+        if(!timeline.getTracks().isEmpty() && timeline.getTracks().get(0).clips != null){
+            int resourceId = timeline.getTracks().get(0).clips.peek().getResource();
+            serializeFile(timeline.getProjectName(), resourceId);
+        } else{
+            AlertDialog.Builder message = new AlertDialog.Builder(this);
+            message.setMessage("Cannot export empty timeline!");
+            message.setCancelable(true);
+            message.show();
+        }
+
     }
 
     /*
@@ -684,6 +704,48 @@ public class TimelineActivity extends AppCompatActivity implements View.OnClickL
                 }
             }, 2820*position);
         }
+    }
+
+    public void serializeFile(String fileName, int rawId) {
+
+        try {
+
+            File myDir;
+            myDir = new File(getFilesDir().getPath());
+            myDir.mkdirs();
+
+            // create a new file, to save the downloaded file
+
+            String mFileName = fileName+".mp3";
+            File file = new File(myDir, mFileName);
+
+            FileOutputStream fileOutput = new FileOutputStream(file);
+
+            // Stream used for reading the data from the internet
+            InputStream inputStream = getResources().openRawResource(rawId);
+
+
+            // create a buffer...
+            byte[] buffer = new byte[8*1024];
+            int bufferLength = 0;
+
+            while ((bufferLength = inputStream.read(buffer)) > 0) {
+                fileOutput.write(buffer, 0, bufferLength);
+            }
+            // close the output stream when complete //
+            fileOutput.close();
+
+        } catch (final MalformedURLException e) {
+            // showError("Error : MalformedURLException " + e);
+            e.printStackTrace();
+        } catch (final IOException e) {
+            // showError("Error : IOException " + e);
+            e.printStackTrace();
+        } catch (final Exception e) {
+            // showError("Error : Please check your internet connection " + e);
+        }
+
+        Log.i("Debug", "File: " + fileName + " written to disk");
     }
     @Override
     public void onBackPressed() {

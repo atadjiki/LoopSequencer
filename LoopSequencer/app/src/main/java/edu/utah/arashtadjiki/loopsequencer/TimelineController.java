@@ -16,79 +16,7 @@ import java.util.List;
  * Created by Arash on 12/3/2016.
  */
 
-/*
- * An external class that manages the
- * timeline data model, such as playing tracks,
- * adding and removing clips and creating audio clips.
- */
 public class TimelineController {
-
-    public static HashMap<Integer, List<AudioClip>> prepareBuffer(Timeline timeline, int start, int end){
-
-        HashMap<Integer, List<AudioClip>> bufferMap = new HashMap();
-
-        for (Track track : timeline.getTracks()) {
-            if(track.isMute() == false) {
-                int count = start;
-                while (count < track.clips.size() && count <= end) {
-
-                    AudioClip clip = (AudioClip) track.clips.toArray()[count];
-
-                    if (bufferMap.containsKey(count))
-                        bufferMap.get(count).add(clip);
-                    else {
-                        bufferMap.put(count, new ArrayList());
-                        bufferMap.get(count).add(clip);
-                    }
-                    count++;
-                }
-            }
-        }
-
-        return bufferMap;
-    }
-
-    public static void playBuffer(Context inContext, HashMap<Integer, List<AudioClip>> buffer){
-
-        final ArrayList<Integer> positions = new ArrayList<>();
-        final SoundPool spool = new SoundPool(20, AudioManager.STREAM_MUSIC, 0);
-        final MediaPlayer mplayer = new MediaPlayer();
-
-        final HashMap<Integer, List<AudioClip>> bufferMap = buffer;
-        final Context context = inContext;
-        positions.addAll(bufferMap.keySet());
-        Collections.sort(positions);
-
-        for (Integer position : positions) {
-
-            List<AudioClip> toPlay = bufferMap.get(position);
-
-            // Load the sample IDs
-            for (AudioClip clip : toPlay) {
-                spool.load(context, clip.getResource(), position);
-            }
-
-            spool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
-                @Override
-                public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
-
-                    soundPool.play(sampleId, 100f, 100f, 1, 0, 1);
-                }
-            });
-        }
-    }
-
-    public static void playFile(String path){
-
-        try {
-            MediaPlayer mediaPlayer = new MediaPlayer();
-            mediaPlayer.setDataSource(path);
-            mediaPlayer.start();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
 
     public static CharSequence[] getClipOptions(int TrackType){
 

@@ -31,6 +31,7 @@ public class SendMp3Fragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
+        getActivity().setTitle("Send MP3");
         _rootLayout = new LinearLayout(getContext());
         _rootLayout.setOrientation(LinearLayout.VERTICAL);
         _rootLayout.setDividerPadding(100);
@@ -63,6 +64,7 @@ public class SendMp3Fragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
 
         Log.i("Debug", "Sending MP3");
+
     }
 
     public static SendMp3Fragment newInstance() {

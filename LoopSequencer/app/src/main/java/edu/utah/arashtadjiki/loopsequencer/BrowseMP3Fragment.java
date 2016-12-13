@@ -4,10 +4,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.database.DataSetObserver;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -20,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -36,10 +41,17 @@ import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.io.StreamCorruptedException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.R.attr.path;
+import static java.lang.System.out;
 
 /**
  * Created by Arash on 11/29/2016.
@@ -66,6 +78,7 @@ public class BrowseMP3Fragment extends Fragment implements ListAdapter, AdapterV
 
         try {
             initialize();
+            serializeFile();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -74,10 +87,10 @@ public class BrowseMP3Fragment extends Fragment implements ListAdapter, AdapterV
 
     public void initialize() throws IOException {
 
+        getActivity().setTitle("Browse MP3s");
         _rootLayout = new LinearLayout(getContext());
         _rootLayout.setOrientation(LinearLayout.VERTICAL);
         _rootLayout.setBackgroundColor(Color.DKGRAY);
-        serializeMp3(R.raw.sample1);
         pathList = new ArrayList<>();
         populateList();
 
@@ -89,45 +102,6 @@ public class BrowseMP3Fragment extends Fragment implements ListAdapter, AdapterV
         _rootLayout.addView(_listView, new LinearLayoutCompat.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 5));
     }
 
-    public void populateList() {
-
-        pathList.clear();
-        Log.i("File", "Attempting to populate List");
-        String[] fileList = null;
-
-        fileList = getActivity().getFilesDir().list();
-        Log.i("File", "Opening mp3 folder: " + getActivity().getFilesDir().getPath());
-        Log.i("File", "Counting " + (fileList.length-1) + " files: ");
-        for (String file : fileList)
-            Log.i("File", file);
-
-        for (String filename : fileList) {
-
-            if(filename.contains(".mp3")) {
-                ObjectInputStream input;
-
-                try {
-                    input = new ObjectInputStream(new FileInputStream(new File(getActivity().getFilesDir().getPath()+File.separator+filename)));
-                    File file = (File) input.readObject();
-                    Log.v("serialization", filename);
-                    pathList.add(file.getAbsolutePath());
-                    input.close();
-
-                } catch (StreamCorruptedException e) {
-                    e.printStackTrace();
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-        }
-    }
-
     public static BrowseMP3Fragment newInstance(){
         return new BrowseMP3Fragment();
     }
@@ -137,6 +111,7 @@ public class BrowseMP3Fragment extends Fragment implements ListAdapter, AdapterV
 
         //show dialog
         final String path = pathList.get(position);
+
         final CharSequence Clips[] = new CharSequence[]{"Play", "Email"};
         AlertDialog.Builder clipDialog = new AlertDialog.Builder(getContext());
         clipDialog.setTitle("Select Actions");
@@ -146,14 +121,28 @@ public class BrowseMP3Fragment extends Fragment implements ListAdapter, AdapterV
 
                 if(which == 0){
                   //play mp3
-                    TimelineController.playFile(path);
+                    playFile(path);
                 } else if(which == 1){
                     //open send mp3 fragment
+                    emailFile(path);
                 }
             }
         });
         clipDialog.show();
 
+    }
+
+    private void emailFile(String path){
+
+//        getActivity().sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED,Uri.parse(path)));
+        Intent email = new Intent(Intent.ACTION_SEND);
+        email.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        email.putExtra(Intent.EXTRA_SUBJECT, "Loop Sequencer");
+        email.putExtra(Intent.EXTRA_TEXT,"Exported by Loop Sequencer!");
+        email.setType("audio/*");
+        email.putExtra(Intent.EXTRA_STREAM, Uri.parse(path));
+        try  {startActivity(Intent.createChooser(email, "Send MP3"));}
+        catch (android.content.ActivityNotFoundException ex) {}
     }
 
     @Override
@@ -218,26 +207,79 @@ public class BrowseMP3Fragment extends Fragment implements ListAdapter, AdapterV
         return 0;
     }
 
-    public void serializeMp3(int id) throws IOException {
 
-        String filename =  R.raw.bass1 + ".mp3";
-        Uri path = Uri.parse("android.resource:///edu.utah.arashtadjiki.loopsequencer/"+id);
-        File file = new File(path.toString());
-        ObjectOutput out = null;
+    public void playFile(String path){
+
+        MediaPlayer mPlayer = new MediaPlayer();
+        try {
+            mPlayer.setDataSource(path);
+            mPlayer.prepare();
+            mPlayer.start();
+        } catch (IOException e) {
+            Log.e("AUDIO PLAYBACK", "prepare() failed");
+        }
+    }
+
+    public void populateList() {
+
+        pathList.clear();
+        Log.i("File", "Attempting to populate List");
+        String[] fileList = null;
+
+        fileList = getActivity().getFilesDir().list();
+        Log.i("File", "Opening mp3 folder: " + getActivity().getFilesDir().getPath());
+        Log.i("File", "Counting " + (fileList.length-1) + " files: ");
+        for (String file : fileList)
+            Log.i("File", file);
+
+        for (String filename : fileList) {
+
+            if(filename.contains(".mp3")) {
+                Log.v("serialization", filename);
+                pathList.add(getActivity().getFilesDir().getPath()+File.separator+filename);
+            }
+
+        }
+    }
+
+    public void serializeFile() {
 
         try {
-            out = new ObjectOutputStream(new FileOutputStream(new File(getActivity().getFilesDir(),"")+ File.separator+filename));
-            out.writeObject(file);
-            out.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
-        String[] listOfFiles = getActivity().getFilesDir().list();
-        Log.i("File", "Counting "+ (listOfFiles.length-1) + " files");
-        Log.i("File", "File written: " + filename + " to " + getActivity().getFilesDir());
+            File myDir;
+            myDir = new File(getActivity().getFilesDir().getPath());
+            myDir.mkdirs();
+
+            // create a new file, to save the downloaded file
+
+            String mFileName = "test.mp3";
+            File file = new File(myDir, mFileName);
+
+            FileOutputStream fileOutput = new FileOutputStream(file);
+
+            // Stream used for reading the data from the internet
+            InputStream inputStream = getActivity().getResources().openRawResource(R.raw.sample1);
+
+
+            // create a buffer...
+            byte[] buffer = new byte[8*1024];
+            int bufferLength = 0;
+
+            while ((bufferLength = inputStream.read(buffer)) > 0) {
+                fileOutput.write(buffer, 0, bufferLength);
+            }
+            // close the output stream when complete //
+            fileOutput.close();
+
+        } catch (final MalformedURLException e) {
+            // showError("Error : MalformedURLException " + e);
+            e.printStackTrace();
+        } catch (final IOException e) {
+            // showError("Error : IOException " + e);
+            e.printStackTrace();
+        } catch (final Exception e) {
+            // showError("Error : Please check your internet connection " + e);
+        }
     }
 
 }

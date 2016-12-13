@@ -37,6 +37,7 @@ public class NewTimelineFragment extends Fragment implements View.OnClickListene
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
+        getActivity().setTitle("Create New Project");
         _rootLayout = new LinearLayout(getContext());
         _rootLayout.setOrientation(LinearLayout.VERTICAL);
         _rootLayout.setGravity(Gravity.CENTER);
@@ -72,6 +73,7 @@ public class NewTimelineFragment extends Fragment implements View.OnClickListene
 
         Log.i("Debug", "Creating Game");
         String projectname = nameField.getText().toString().trim().toLowerCase();
+        if(projectname.isEmpty()) projectname = "Default";
         Intent showTimelineIntent = new Intent();
         Timeline timeline = new Timeline(projectname);
         Bundle bundle = new Bundle(1);
