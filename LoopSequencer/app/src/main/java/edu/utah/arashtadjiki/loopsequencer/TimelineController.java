@@ -2,25 +2,15 @@ package edu.utah.arashtadjiki.loopsequencer;
 
 import android.content.Context;
 import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.media.SoundPool;
-import android.provider.MediaStore;
 import android.util.Log;
-import android.widget.Gallery;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutput;
-import java.io.ObjectOutputStream;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.List;
-import java.util.zip.Adler32;
 
 /**
  * Created by Arash on 12/3/2016.
@@ -33,39 +23,39 @@ import java.util.zip.Adler32;
  */
 public class TimelineController {
 
-    public static void addTrack(Timeline timeline, int trackType){
-        timeline.getTracks().add(new Track(trackType));
-    }
-
-    public static HashMap<Integer, List<AudioClip>> prepareBuffer(Timeline timeline){
+    public static HashMap<Integer, List<AudioClip>> prepareBuffer(Timeline timeline, int start, int end){
 
         HashMap<Integer, List<AudioClip>> bufferMap = new HashMap();
 
         for (Track track : timeline.getTracks()) {
-            int count = 0;
-            while(count < track.clips.size()){
+            if(track.isMute() == false) {
+                int count = start;
+                while (count < track.clips.size() && count <= end) {
 
-                AudioClip clip = (AudioClip) track.clips.toArray()[count];
+                    AudioClip clip = (AudioClip) track.clips.toArray()[count];
 
-                if(bufferMap.containsKey(count))
-                    bufferMap.get(count).add(clip);
-                else {
-                    bufferMap.put(count, new ArrayList());
-                    bufferMap.get(count).add(clip);
+                    if (bufferMap.containsKey(count))
+                        bufferMap.get(count).add(clip);
+                    else {
+                        bufferMap.put(count, new ArrayList());
+                        bufferMap.get(count).add(clip);
+                    }
+                    count++;
                 }
-
-
-                count++;
             }
         }
 
         return bufferMap;
     }
 
-    public static void playBuffer(Context context, HashMap<Integer, List<AudioClip>> bufferMap){
+    public static void playBuffer(Context inContext, HashMap<Integer, List<AudioClip>> buffer){
 
-        ArrayList<Integer> positions = new ArrayList<>();
-        SoundPool spool = new SoundPool(20, AudioManager.STREAM_MUSIC, 0);
+        final ArrayList<Integer> positions = new ArrayList<>();
+        final SoundPool spool = new SoundPool(20, AudioManager.STREAM_MUSIC, 0);
+        final MediaPlayer mplayer = new MediaPlayer();
+
+        final HashMap<Integer, List<AudioClip>> bufferMap = buffer;
+        final Context context = inContext;
         positions.addAll(bufferMap.keySet());
         Collections.sort(positions);
 
@@ -73,19 +63,31 @@ public class TimelineController {
 
             List<AudioClip> toPlay = bufferMap.get(position);
 
-            // Sound pool new instance
-
-            // Sound pool on load complete listener
-            spool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
-                @Override public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
-                    Log.i("OnLoadCompleteListener","Sound "+sampleId+" loaded.");
-                    soundPool.play(sampleId, 200f, 200f, 1, 0, 1);
-                }});
             // Load the sample IDs
             for (AudioClip clip : toPlay) {
                 spool.load(context, clip.getResource(), position);
             }
+
+            spool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
+                @Override
+                public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
+
+                    soundPool.play(sampleId, 100f, 100f, 1, 0, 1);
+                }
+            });
         }
+    }
+
+    public static void playFile(String path){
+
+        try {
+            MediaPlayer mediaPlayer = new MediaPlayer();
+            mediaPlayer.setDataSource(path);
+            mediaPlayer.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public static CharSequence[] getClipOptions(int TrackType){
@@ -108,8 +110,53 @@ public class TimelineController {
 
     public static CharSequence[] getTrackOptions(){
 
-
-
         return new CharSequence[]{"Drum", "Bass", "Sample"};
+    }
+
+    public static String ResolveName(int resourceID){
+
+        if(resourceID == R.raw.bass1)
+            return "Bass 1";
+        else if(resourceID == R.raw.bass2)
+            return "Bass 2";
+        else if(resourceID == R.raw.bass3)
+            return "Bass 3";
+        else if(resourceID == R.raw.bass4)
+            return "Bass 4";
+
+        else if(resourceID == R.raw.drum1)
+            return "Drum 1";
+        else if(resourceID == R.raw.drum2)
+            return "Drum 2";
+        else if(resourceID == R.raw.drum3)
+            return "Drum 3";
+        else if(resourceID == R.raw.drum4)
+            return "Drum 4";
+
+        else if(resourceID == R.raw.sample1)
+            return "Sample 1";
+        else if(resourceID == R.raw.sample2)
+            return "Sample 2";
+        else if(resourceID == R.raw.sample3)
+            return "Sample 3";
+        else if(resourceID == R.raw.sample4)
+            return "Sample 4";
+        else if(resourceID == R.raw.emptyaudio){
+            return "Empty";
+        }
+        else
+            return null;
+    }
+
+    public static String ResolveTrackType(int trackType){
+
+        if (trackType == Track.DRUM)
+            return "Drum";
+        else if (trackType == Track.SAMPLE)
+            return "Sample";
+        else if(trackType == Track.BASS)
+            return "Bass";
+
+        return null;
     }
 }

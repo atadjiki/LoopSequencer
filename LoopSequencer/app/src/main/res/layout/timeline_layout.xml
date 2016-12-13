@@ -24,15 +24,24 @@
                 android:background="@android:color/darker_gray"
                 android:layout_gravity="bottom|center_horizontal">
 
-                <Space
+                <TextView
+                    android:text="Start: 0, End: 0"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="23.19" />
+                    android:id="@+id/start_end"
+                    android:layout_weight="1.26" />
+
+                <Button
+                    android:text="Reset End Points"
+                    android:layout_width="120dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/reset_start_end"
+                    style="@style/Widget.AppCompat.Button.Small" />
 
                 <Button
                     android:text="Save"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:id="@+id/save_button"
                     style="@style/Widget.AppCompat.Button.Small" />
 

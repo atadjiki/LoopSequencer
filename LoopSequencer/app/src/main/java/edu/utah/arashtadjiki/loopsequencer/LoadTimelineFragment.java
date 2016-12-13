@@ -1,5 +1,6 @@
 package edu.utah.arashtadjiki.loopsequencer;
 
+import android.content.Intent;
 import android.database.DataSetObserver;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -11,8 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.Gallery;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -31,10 +30,9 @@ import java.util.List;
  * Created by Arash on 11/29/2016.
  */
 
-public class LoadFragment extends Fragment implements View.OnClickListener, ListAdapter, AdapterView.OnItemClickListener {
+public class LoadTimelineFragment extends Fragment implements ListAdapter, AdapterView.OnItemClickListener {
 
     private LinearLayout _rootLayout;
-    private Button openButton;
     private ListView timelineList;
     private List<Timeline> timelines;
 
@@ -53,10 +51,6 @@ public class LoadFragment extends Fragment implements View.OnClickListener, List
         timelineList.setOnItemClickListener(this);
         timelineList.setBackgroundColor(Color.DKGRAY);
         timelineList.setAdapter(this);
-
-        openButton = new Button(getContext());
-        openButton.setText("Open");
-        openButton.setOnClickListener(this);
 
         _rootLayout.addView(timelineList, new LinearLayoutCompat.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 4));
       //  _rootLayout.addView(openButton, new LinearLayoutCompat.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
@@ -104,10 +98,18 @@ public class LoadFragment extends Fragment implements View.OnClickListener, List
         }
     }
 
-    @Override
-    public void onClick(View v) {
 
-        Log.i("Debug", "Opening Game");
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+        Intent showTimelineIntent = new Intent();
+        Timeline timeline = (Timeline) getItem(position);
+        Bundle bundle = new Bundle(1);
+        bundle.putSerializable("timeline", timeline);
+        showTimelineIntent.putExtra("timeline", bundle);
+        showTimelineIntent.setClass(getContext(), TimelineActivity.class);
+        startActivity(showTimelineIntent);
+        getActivity().finish();
 
     }
 
@@ -143,9 +145,9 @@ public class LoadFragment extends Fragment implements View.OnClickListener, List
         return false;
     }
 
-    public static LoadFragment newInstance() {
+    public static LoadTimelineFragment newInstance() {
 
-        return  new LoadFragment();
+        return  new LoadTimelineFragment();
     }
 
     @Override
@@ -178,8 +180,4 @@ public class LoadFragment extends Fragment implements View.OnClickListener, List
         return 0;
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-    }
 }

@@ -14,12 +14,24 @@ public class Track implements Serializable {
     public static final int BASS = 1;
     public static final int SAMPLE = 2;
     private int trackType;
+    private boolean mute;
 
     public Queue<AudioClip> clips;
+
+    public boolean isMute() {
+        return mute;
+    }
+
+    public void toggleMute(){
+        if(mute) mute = false;
+        else mute = true;
+    }
 
     public Track(int _trackType){
         trackType = _trackType;
         clips = new LinkedList<>();
+        mute = false;
+
     }
 
     public int getTrackType() {

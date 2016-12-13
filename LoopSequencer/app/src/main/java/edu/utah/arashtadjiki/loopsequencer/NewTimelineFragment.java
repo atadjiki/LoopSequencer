@@ -1,6 +1,7 @@
 package edu.utah.arashtadjiki.loopsequencer;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -71,7 +72,14 @@ public class NewTimelineFragment extends Fragment implements View.OnClickListene
 
         Log.i("Debug", "Creating Game");
         String projectname = nameField.getText().toString().trim().toLowerCase();
-        newGameListener.OnNewGame(projectname);
+        Intent showTimelineIntent = new Intent();
+        Timeline timeline = new Timeline(projectname);
+        Bundle bundle = new Bundle(1);
+        bundle.putSerializable("timeline", timeline);
+        showTimelineIntent.putExtra("timeline", bundle);
+        showTimelineIntent.setClass(getContext(), TimelineActivity.class);
+        startActivity(showTimelineIntent);
+        getActivity().finish();
 
 
     }
